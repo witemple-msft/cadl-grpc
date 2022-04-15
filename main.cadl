@@ -1,0 +1,24 @@
+import "cadl-grpc";
+
+@package("com.azure.greeter")
+namespace Azure.Greeter;
+
+@service
+interface Greeter {
+  sayHello(request: HelloRequest): HelloReply;
+  sayHelloFrom(requestFrom: HelloRequestFrom): HelloReply;
+}
+
+model HelloRequest {
+  @field(1) name: string;
+}
+
+model HelloRequestFrom {
+  @field(1) name: string;
+  @field(2) from: string;
+}
+
+model HelloReply {
+  @field(1) message: string;
+}
+

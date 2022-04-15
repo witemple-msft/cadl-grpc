@@ -1,0 +1,20 @@
+{
+  "name": "cadl-grpc-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -rf cadl-output/*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@cadl-lang/compiler": "^0.29.0",
+    "cadl-grpc": "file:./cadl-grpc"
+  },
+  "devDependencies": {
+    "typescript": "^4.7.0-dev.20220314"
+  }
+}
