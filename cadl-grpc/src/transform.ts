@@ -1,6 +1,5 @@
 import {
   getIntrinsicModelName,
-  getServiceNamespaceString,
   InterfaceType,
   isIntrinsic,
   ModelType,
@@ -8,7 +7,6 @@ import {
   NamespaceType,
   OperationType,
   Program,
-  resolvePath,
   Type,
 } from "@cadl-lang/compiler";
 import {
@@ -25,66 +23,14 @@ import {
   ProtoScalar,
 } from "./proto.js";
 import { serviceKey, fieldIndexKey, packageKey } from "./lib.js";
-import { writeProtoFile } from "./write.js";
 import { reportDiagnostic } from "./lib.js";
-
-/**
- * Options that the gRPC emitter accepts.
- */
-interface GrpcEmitterOptions {
-  /**
-   * The directory where the emitter will write the Protobuf output tree.
-   */
-  outDir: string;
-}
-
-// Default options
-const DEFAULT_GRPC_EMITTER_OPTIONS: GrpcEmitterOptions = {
-  // TODO: shouldn't this be configured by default?
-  outDir: "./cadl-output/",
-};
-
-/**
- * Create a worker function that converts the CADL program to Protobuf and writes it to the file system.
- */
-export function createGrpcEmitter(
-  program: Program
-): (emitterOptions?: Partial<GrpcEmitterOptions>) => Promise<void> {
-  return async function doEmit(emitterOptions) {
-    const options = {
-      ...DEFAULT_GRPC_EMITTER_OPTIONS,
-      ...emitterOptions,
-    };
-
-    const outDir = resolvePath(options.outDir);
-
-    // Convert the program to a set of proto files.
-    const files = cadlToProto(program);
-
-    if (!program.compilerOptions.noEmit && !program.hasError()) {
-      for (const file of files) {
-        // If the file has a package, emit it to a path that is shaped like the package name. Otherwise emit to
-        // main.proto
-        // TODO: What do we do if there are multiple files without packages, or multiple files with the same package?
-        const packageSlug = file.package?.split(".") ?? ["main"];
-        const filePath = resolvePath(outDir, ...packageSlug.slice(0, -1));
-
-        await program.host.mkdirp(filePath);
-        await program.host.writeFile(
-          resolvePath(filePath, packageSlug.at(-1) + ".proto"),
-          writeProtoFile(file)
-        );
-      }
-    }
-  };
-}
 
 /**
  * Create a set of proto files that represent the CADL program.
  *
  * This is the meat of the emitter.
  */
-function cadlToProto(program: Program): ProtoFile[] {
+export function cadlToProto(program: Program): ProtoFile[] {
   const packages = program.stateMap(packageKey) as Map<NamespaceType, string>;
 
   // Emit a file per package.
@@ -157,6 +103,7 @@ function cadlToProto(program: Program): ProtoFile[] {
     ): ProtoMethodDeclaration {
       return {
         kind: "method",
+        // TODO: I was capitalizing these. I could capitalize by default and allow overriding through a decorator.
         name: operation.name,
         input: addModelAsInput(operation.parameters),
         returns: addReturnType(operation.returnType),
@@ -316,6 +263,7 @@ function cadlToProto(program: Program): ProtoFile[] {
      * @returns a corresponding field declaration
      */
     function toField(property: ModelTypeProperty): ProtoFieldDeclaration {
+      // TODO: handle arrays with repeated fields.
       return {
         kind: "field",
         name: property.name,

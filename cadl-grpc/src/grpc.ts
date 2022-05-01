@@ -13,7 +13,7 @@ import {
   reportDiagnostic,
   serviceKey,
 } from "./lib.js";
-import { createGrpcEmitter } from "./lower.js";
+import { createGrpcEmitter } from "./emit.js";
 
 /**
  * # cadl-grpc : gRPC/Protobuf Emitter and Decorators for CADL
@@ -130,7 +130,7 @@ export function $field(
   }
 
   // TODO: Attach the field indices to the parent _model_ so that we can track reservations, field overlaps, etc. in the
-  // decorators and report them to LSP.
+  // decorators and report errors to LSP.
   const model = target.node.parent;
   if (model?.kind !== SyntaxKind.ModelStatement)
     throw new InternalError("model property parent is not a model");
