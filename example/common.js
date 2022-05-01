@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 import loader from "@grpc/proto-loader";
 
 const GREETER_PROTO = "../cadl-output/com/azure/greeter.proto";

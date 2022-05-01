@@ -1,14 +1,18 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+// A simple server that implements the Greeter service.
+
 import grpc from "@grpc/grpc-js";
 import { greeterPackage, SERVER_URL } from "./common.js";
 
-var temp;
 const {
   com: {
     azure: {
       greeter: { Greeter },
     },
   },
-} = (temp = grpc.loadPackageDefinition(greeterPackage));
+} = grpc.loadPackageDefinition(greeterPackage);
 
 const server = new grpc.Server();
 

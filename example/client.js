@@ -1,3 +1,8 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+// Just a simple driver program that calls the server
+
 import grpc from "@grpc/grpc-js";
 import { greeterPackage, SERVER_URL } from "./common.js";
 

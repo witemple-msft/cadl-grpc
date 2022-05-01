@@ -12,8 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@cadl-lang/compiler": "^0.29.0",
-    "@cadl-lang/versioning": "^0.3.2"
+    "@cadl-lang/compiler": "file:../node_modules/@cadl-lang/compiler",
+    "@cadl-lang/versioning": "file:../node_modules/@cadl-lang/versioning"
   },
   "devDependencies": {
     "ts-node": "^10.7.0",
